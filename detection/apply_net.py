@@ -36,7 +36,7 @@ def main(args):
     # Make sure only 1 data point is processed at a time. This simulates
     # deployment.
     cfg.defrost()
-    cfg.DATALOADER.NUM_WORKERS = 32
+    cfg.DATALOADER.NUM_WORKERS = 5
     cfg.SOLVER.IMS_PER_BATCH = 1
 
     cfg.MODEL.DEVICE = device.type
@@ -73,7 +73,7 @@ def main(args):
     # Build predictor
     predictor = build_predictor(cfg)
     test_data_loader = build_detection_test_loader(
-        cfg, dataset_name=args.test_dataset)
+        cfg, dataset_name=args.test_dataset, num_workers=0)
 
     final_output_list = []
 
