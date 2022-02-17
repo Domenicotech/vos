@@ -4,6 +4,13 @@ This is the source code accompanying the paper [***VOS: Learning What You Don’
 
 
 The codebase is heavily based on [ProbDet](https://github.com/asharakeh/probdet) and [Detectron2](https://github.com/facebookresearch/detectron2).
+
+## Requirements
+```
+pip install -r requirements.txt
+```
+In addition, install detectron2 following [here](https://detectron2.readthedocs.io/en/latest/tutorials/install.html).
+
 ## Dataset Preparation
 
 **PASCAL VOC**
@@ -67,11 +74,12 @@ The OpenImages dataset folder should have the following structure:
          ├── coco_classes
          └── ood_classes_rm_overlap
 
-Before training, modify the dataset address in the ./detection/core/datasets/setup_datasets.py according to your local dataset address.
+
 
 **Visualization of the OOD datasets**
 
  The OOD images with respect to different in-distribution datasets can be downloaded from [ID-VOC-OOD-COCO](https://drive.google.com/drive/folders/1NxodhoxTX5YBHJWHAa6tB2Ta1oxoTfzu?usp=sharing), [ID-VOC-OOD-openimages](https://drive.google.com/drive/folders/1pRP7CAWG7naDECfejo03cl7PF3VJEjrn?usp=sharing), [ID-BDD-OOD-COCO](https://drive.google.com/drive/folders/1Wgmfcp2Gd3YvYVyoRRBWUiwwKYXJeuo8?usp=sharing), [ID-BDD-OOD-openimages](https://drive.google.com/drive/folders/1LyOFqSm2G8x7d2xUkXma2pFJVOLgm3IQ?usp=sharing).
+
 
 ## Training
 
@@ -80,10 +88,13 @@ Firstly, enter the detection folder by running
 cd detection
 ```
 
+Before training, modify the dataset address by changing "dataset-dir" according to your local dataset address.
+
 **Vanilla Faster-RCNN with VOC as the in-distribution dataset**
 ```
 
 python train_net.py
+--dataset-dir path/to/dataset/dir
 --num-gpus 8
 --config-file VOC-Detection/faster-rcnn/vanilla.yaml 
 --random-seed 0 
@@ -92,6 +103,7 @@ python train_net.py
 **Vanilla Faster-RCNN with BDD as the in-distribution dataset**
 ```
 python train_net.py 
+--dataset-dir path/to/dataset/dir
 --num-gpus 8 
 --config-file BDD-Detection/faster-rcnn/vanilla.yaml 
 --random-seed 0 
@@ -100,6 +112,7 @@ python train_net.py
 **VOS on ResNet**
 ```
 python train_net_gmm.py 
+--dataset-dir path/to/dataset/dir
 --num-gpus 8 
 --config-file VOC-Detection/faster-rcnn/vos.yaml 
 --random-seed 0 
@@ -110,6 +123,7 @@ python train_net_gmm.py
 Before training using the RegNet as the backbone, download the pretrained RegNet backbone from [here](https://drive.google.com/file/d/1WyE_OIpzV_0E_Y3KF4UVxIZJTSqB7cPO/view?usp=sharing).
 ```
 python train_net_gmm.py 
+--dataset-dir path/to/dataset/dir
 --num-gpus 8 
 --config-file VOC-Detection/faster-rcnn/regnetx.yaml 
 --random-seed 0 
@@ -124,6 +138,7 @@ Before training on VOS, change "VOS.STARTING_ITER" and "VOS.SAMPLE_NUMBER" in th
 Firstly run on the in-distribution dataset:
 ```
 python apply_net.py 
+--dataset-dir path/to/dataset/dir
 --test-dataset voc_custom_val 
 --config-file VOC-Detection/faster-rcnn/vos.yaml 
 --inference-config Inference/standard_nms.yaml 
@@ -135,6 +150,7 @@ Then run on the OOD dataset:
 
 ```
 python apply_net.py
+--dataset-dir path/to/dataset/dir
 --test-dataset coco_ood_val 
 --config-file VOC-Detection/faster-rcnn/vos.yaml 
 --inference-config Inference/standard_nms.yaml 
@@ -157,6 +173,7 @@ Here the threshold is determined according to [ProbDet](https://github.com/ashar
 Firstly run on the in-distribution dataset:
 ```
 python apply_net.py 
+--dataset-dir path/to/dataset/dir
 --test-dataset bdd_custom_val 
 --config-file VOC-Detection/faster-rcnn/vos.yaml 
 --inference-config Inference/standard_nms.yaml 
@@ -168,6 +185,7 @@ Then run on the OOD dataset:
 
 ```
 python apply_net.py 
+--dataset-dir path/to/dataset/dir
 --test-dataset coco_ood_val_bdd 
 --config-file VOC-Detection/faster-rcnn/vos.yaml 
 --inference-config Inference/standard_nms.yaml 
